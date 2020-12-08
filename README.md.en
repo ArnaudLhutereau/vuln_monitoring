@@ -1,0 +1,70 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ArnaudLhutereau/vuln_monitoring/main/ressources/logo.png" alt="Vuln Monitoring Logo"/>
+</p>
+
+### What is it?
+
+Vuln Monitoring is a script that watches the latest vulnerabilities published on the Internet. It browses newsfeeds and detects whether software used by your organization is impacted. It notifies you via e-mail when a vulnerability is detected.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ArnaudLhutereau/vuln_monitoring/main/ressources/preview.png" alt="Preview email notif"/>
+</p>
+
+### Prerequisites
+
+- An email account to which to send notifications (SMTP)
+- Python, pip and some libraries
+- A Twitter developer account with an API key
+
+
+### Installation
+
+1. Clone the Git repository.
+
+2. Install the libraries necessary for proper function :
+> pip install -r requirements.txt
+
+3. Change the environment variables *(SMTP server, usernames, API key...)* in the *script.py* file.
+
+### Configuration
+
+You can configure the tool by customizing :
+- The applications to watch : just add a new line in the *"application.txt"* file.
+- The notification template : you need to modify the HTML code used in the *sendEmailAlert()* function. By default the file is in the *ressources* directory. (That's how you spell "resources" in French.)
+
+
+### Deployment
+
+By default the script is configured to browse news feeds hourly.
+
+You need to configure *cron* in the deployment environment to automate the execution of the script.
+
+> 0 * * * * python /path/to/script.py >/dev/null 2>&1
+
+
+### Connector list
+
+- CVEnew on Twitter (via API)
+- CERT-FR (RSS feed)
+
+
+
+### Adding a new connector
+
+If you want to watch a new vulnerability news feed, create a new function and call it from main(), like this :
+
+> alert_feed.append(**myNewConnector**(application_list))
+
+The application_list parameter is a list containing all the names of the applications to watch for (example : *['nginx','windows 10']*).
+
+The return value alert_list contains all the vulnerabilities found. It's a list of dictionaries with the following keys :
+- app_name : *Name of the application reported to be vulnerable*
+- description : *Description of the vulnerability*
+- url : *Link for more details*
+
+### Changelog
+
+(day/month/year)
+
+- 05/12/2020 : Publication du script
+- 08/12/2020 : README translated
